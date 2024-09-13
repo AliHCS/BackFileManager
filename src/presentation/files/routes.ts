@@ -20,6 +20,7 @@ export class FilesRoutes {
       [multerAdapter.upload.single("file")],
       filesController.upload
     );
+    router.get("/files/getAll", filesController.getAll);
     /*  router.post("/auth/login", authController.login); */
 
     return router;

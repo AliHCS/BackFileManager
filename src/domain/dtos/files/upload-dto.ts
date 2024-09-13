@@ -34,7 +34,6 @@ export class UploadFileDto {
     if (isNaN(parsedUserId)) {
       return ["El userId debe ser un número válido"];
     }
-    console.log(file);
     if (
       !file ||
       !file.originalname ||

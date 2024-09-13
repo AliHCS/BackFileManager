@@ -49,4 +49,16 @@ export class FilesController {
       this.handleError(err, res);
     }
   };
+
+  /**
+   * getAll
+   */
+  public getAll = async (req: Request, res: Response) => {
+    const user = req.body.user;
+    const userId = +user.id;
+    try {
+      const files = await this.filesService.getAllById(userId);
+      res.status(200).json({ files });
+    } catch (error) {}
+  };
 }

@@ -30,4 +30,15 @@ export class FileService {
       throw CustomError.internalServer(`Error al subir el archivo: ${error}`);
     }
   }
+
+  /**
+   * async getAll
+   */
+  public async getAllById(userId: number) {
+    const prisma = new PrismaClient();
+    const allFiles = await prisma.file.findMany({
+      where: { userId },
+    });
+    return allFiles;
+  }
 }
