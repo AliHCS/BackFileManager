@@ -88,7 +88,8 @@ export class FilesController {
 
     this.filesService
       .updateFile(updateFilesDto!)
-      .then((file) => res.json({ message: "Archivo actualizado", file }));
+      .then((file) => res.json({ message: "Archivo actualizado", file }))
+      .catch((error) => this.handleError(error, res));
   };
 
   /**

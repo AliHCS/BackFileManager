@@ -73,5 +73,41 @@ export class FileService {
   /**
    * async updateFile
    */
-  public async updateFile(updateDto: UpdateFileDto) {}
+  public async updateFile(updateDto: UpdateFileDto) {
+    try {
+      // Validar el DTO y extraer los valores a actualizar
+      const fileToUpdate = updateDto.values;
+
+      // Obtener el archivo actual de la base de datos
+      const existingFile = await this.prisma.file.findUnique({
+        where: { id: fileToUpdate.id },
+      });
+      if (!existingFile) {
+        throw CustomError.notFound("Archivo no encontrado");
+      }
+
+      // Eliminar el archivo anterior del sistema de archivos
+      const oldFilePath = existingFile.path;
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath); // Eliminar el archivo anterior
+      }
+
+      // Actualizar el archivo en la base de datos
+      const updatedFile = await this.prisma.file.update({
+        where: { id: fileToUpdate.id },
+        data: {
+          filename: fileToUpdate.filename,
+          path: fileToUpdate.path,
+          mimetype: fileToUpdate.mimetype,
+          size: fileToUpdate.size,
+          updatedAt: fileToUpdate.updatedAt || new Date(), // Actualizar fecha si es necesario
+        },
+      });
+      return updatedFile;
+    } catch (error) {
+      throw CustomError.internalServer(
+        `Error al actualizar el archivo: ${error}`
+      );
+    }
+  }
 }
