@@ -22,6 +22,11 @@ export class FilesRoutes {
     );
     router.get("/files/getAll", filesController.getAll);
     router.delete("/files/delete/:id", filesController.delteFile);
+    router.put(
+      "/files/update/:id",
+      [multerAdapter.upload.single("file")],
+      filesController.updateFile
+    );
     /*  router.post("/auth/login", authController.login); */
 
     return router;

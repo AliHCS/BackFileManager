@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { CustomError, UploadFileDto } from "../../domain";
 import { LoginDto } from "../../domain/dtos/auth/login-dto";
 import { FileService } from "../services/files.service";
+import { UpdateFileDto } from "../../domain/dtos/files/update-dto";
 
 export class FilesController {
   //* DI
@@ -58,6 +59,36 @@ export class FilesController {
       .getAllById(userId)
       .then((file) => res.json(file))
       .catch((error) => this.handleError(error, res));
+  };
+
+  /**
+   * updateFile
+   */
+  public updateFile = async (req: Request, res: Response) => {
+    const idFile = req.params.id;
+    const file = req.file;
+    if (!file || !idFile) {
+      return res
+        .status(400)
+        .json({ error: "El archivo y idFile son requeridos" });
+    }
+
+    // Crear un objeto combinando req.body y req.file para pasarlo al DTO
+    const props = {
+      id: idFile,
+      file: {
+        originalname: file.originalname,
+        path: file.path,
+        mimetype: file.mimetype,
+        size: file.size,
+      },
+    };
+    const [error, updateFilesDto] = UpdateFileDto.create(props);
+    if (error) return res.status(400).json({ error });
+
+    this.filesService
+      .updateFile(updateFilesDto!)
+      .then((file) => res.json({ message: "Archivo actualizado", file }));
   };
 
   /**

@@ -1,5 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { CustomError, FilesEntity, UploadFileDto } from "../../domain"; // Asumiendo que CustomError está en domain
+import {
+  CustomError,
+  FilesEntity,
+  UpdateFileDto,
+  UploadFileDto,
+} from "../../domain"; // Asumiendo que CustomError está en domain
 import fs from "fs";
 import path from "path";
 
@@ -9,21 +14,16 @@ export class FileService {
   prisma = new PrismaClient();
 
   public async uploadFile(uploadDto: UploadFileDto) {
-    // Valida el DTO
-    const [error, validatedFileDto] = UploadFileDto.create(uploadDto);
-    if (error) throw CustomError.badRequest(error);
-
     try {
       const savedFile = await this.prisma.file.create({
         data: {
-          userId: validatedFileDto!.userId, // Asegúrate de que este campo exista en tu esquema de Prisma
-          filename: validatedFileDto!.filename,
-          path: validatedFileDto!.path,
-          mimetype: validatedFileDto!.mimetype,
-          size: validatedFileDto!.size,
-          uploadedAt: validatedFileDto!.uploadedAt,
-          updatedAt:
-            validatedFileDto!.updatedAt || validatedFileDto!.uploadedAt,
+          userId: uploadDto!.userId, // Asegúrate de que este campo exista en tu esquema de Prisma
+          filename: uploadDto!.filename,
+          path: uploadDto!.path,
+          mimetype: uploadDto!.mimetype,
+          size: uploadDto!.size,
+          uploadedAt: uploadDto!.uploadedAt,
+          updatedAt: uploadDto!.updatedAt || uploadDto!.uploadedAt,
         },
       });
       return savedFile;
@@ -69,4 +69,9 @@ export class FileService {
       );
     }
   }
+
+  /**
+   * async updateFile
+   */
+  public async updateFile(updateDto: UpdateFileDto) {}
 }
