@@ -1,6 +1,14 @@
 import multer, { StorageEngine, FileFilterCallback } from "multer";
 import path from "path";
+import fs from "fs";
 import { Request } from "express";
+
+// Asegurarse de que la carpeta uploads exista
+const directoriExist = (dir: string) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+};
 
 // Configuración del almacenamiento de archivos
 const storage: StorageEngine = multer.diskStorage({
@@ -9,8 +17,10 @@ const storage: StorageEngine = multer.diskStorage({
     file: Express.Multer.File,
     cb: (error: Error | null, destination: string) => void
   ) => {
-    // Definir la carpeta de destino para los archivos subidos
-    cb(null, path.join(__dirname, "../../uploads"));
+    const uploadsPath = path.join(__dirname, "../../uploads");
+    // Verificar y crear la carpeta uploads si no existe
+    directoriExist(uploadsPath);
+    cb(null, uploadsPath);
   },
   filename: (
     req: Request,

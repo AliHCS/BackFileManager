@@ -21,6 +21,7 @@ export class FilesRoutes {
       filesController.upload
     );
     router.get("/files/getAll", filesController.getAll);
+    router.delete("/files/delete/:id", filesController.delteFile);
     /*  router.post("/auth/login", authController.login); */
 
     return router;

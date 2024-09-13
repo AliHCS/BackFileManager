@@ -41,13 +41,11 @@ export class FilesController {
     const [error, filesDto] = UploadFileDto.create(props);
     if (error) return res.status(400).json({ error });
 
-    try {
-      // Guardar el archivo usando el servicio
-      const savedFile = await this.filesService.uploadFile(filesDto!);
-      res.status(200).json(savedFile);
-    } catch (err) {
-      this.handleError(err, res);
-    }
+    // Guardar el archivo usando el servicio
+    this.filesService
+      .uploadFile(filesDto!)
+      .then((file) => res.json(file))
+      .catch((error) => this.handleError(error, res));
   };
 
   /**
@@ -56,9 +54,21 @@ export class FilesController {
   public getAll = async (req: Request, res: Response) => {
     const user = req.body.user;
     const userId = +user.id;
-    try {
-      const files = await this.filesService.getAllById(userId);
-      res.status(200).json({ files });
-    } catch (error) {}
+    await this.filesService
+      .getAllById(userId)
+      .then((file) => res.json(file))
+      .catch((error) => this.handleError(error, res));
+  };
+
+  /**
+   * delteFile
+   */
+  public delteFile = async (req: Request, res: Response) => {
+    const idFile = req.params.id;
+
+    this.filesService
+      .deleteFile(idFile)
+      .then((file) => res.json({ message: "Archivo eliminado", file }))
+      .catch((error) => this.handleError(error, res));
   };
 }
