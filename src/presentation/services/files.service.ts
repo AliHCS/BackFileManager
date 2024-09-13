@@ -73,7 +73,7 @@ export class FileService {
   /**
    * async updateFile
    */
-  public async updateFile(updateDto: UpdateFileDto) {
+  public async updateFile(updateDto: UpdateFileDto, uploadedFilePath: string) {
     try {
       // Validar el DTO y extraer los valores a actualizar
       const fileToUpdate = updateDto.values;
@@ -83,6 +83,10 @@ export class FileService {
         where: { id: fileToUpdate.id },
       });
       if (!existingFile) {
+        // Eliminar el archivo recién subido ya que no se encontró en la base de datos
+        if (fs.existsSync(uploadedFilePath)) {
+          fs.unlinkSync(uploadedFilePath); // Eliminar el archivo subido
+        }
         throw CustomError.notFound("Archivo no encontrado");
       }
 
@@ -105,9 +109,7 @@ export class FileService {
       });
       return updatedFile;
     } catch (error) {
-      throw CustomError.internalServer(
-        `Error al actualizar el archivo: ${error}`
-      );
+      throw error;
     }
   }
 }

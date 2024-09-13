@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { FilesController } from "./controller";
-import { AuthMiddleware } from "../middlewares/auth.middleware";
+import { AuthMiddleware } from "../middlewares/index";
 import { FileService } from "../services/files.service";
 import { multerAdapter } from "../../config/index";
 
