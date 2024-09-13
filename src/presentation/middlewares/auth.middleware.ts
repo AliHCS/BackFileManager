@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { JwtAdapter } from "../../config/jwt-adapter";
+import { JwtAdapter } from "../../config/index";
 import { PrismaClient } from "@prisma/client";
 import { UserEntity } from "../../domain";
 

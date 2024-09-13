@@ -1,8 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { CustomError, RegisterDto, UserEntity } from "../../domain";
-import { bcrypAdapter } from "../../config";
 import { LoginDto } from "../../domain/dtos/auth/login-dto";
-import { JwtAdapter } from "../../config/jwt-adapter";
+import { JwtAdapter, bcrypAdapter } from "../../config/index";
 
 export class AuthService {
   //DI

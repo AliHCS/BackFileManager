@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { CustomError, UploadFileDto } from "../../domain"; // Asumiendo que CustomError está en domain
-import { multerAdapter } from "../../config/multer-adapter";
 
 export class FileService {
   // Dependency Injection
