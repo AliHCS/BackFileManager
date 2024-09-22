@@ -6,7 +6,7 @@ import {
   UploadFileDto,
 } from "../../domain"; // Asumiendo que CustomError está en domain
 import fs from "fs";
-import path from "path";
+import { clientS3 } from "../../config/s3-aws";
 
 export class FileService {
   // Dependency Injection
