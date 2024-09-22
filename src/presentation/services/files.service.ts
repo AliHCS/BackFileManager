@@ -6,7 +6,7 @@ import {
   UploadFileDto,
 } from "../../domain"; // Asumiendo que CustomError está en domain
 import fs from "fs";
-import { clientS3 } from "../../config/s3-aws";
+import { uploadFileToS3 } from "../../config/s3-aws";
 
 export class FileService {
   // Dependency Injection
@@ -15,17 +15,30 @@ export class FileService {
 
   public async uploadFile(uploadDto: UploadFileDto) {
     try {
+      const fileKey = `${uploadDto.userId}/${uploadDto.filename}`;
+
+      // Subir el archivo a S3 y obtener la URL
+      const fileUrl = await uploadFileToS3(
+        uploadDto.path,
+        fileKey,
+        uploadDto.mimetype
+      );
+
       const savedFile = await this.prisma.file.create({
         data: {
           userId: uploadDto!.userId, // Asegúrate de que este campo exista en tu esquema de Prisma
           filename: uploadDto!.filename,
-          path: uploadDto!.path,
+          path: fileUrl,
           mimetype: uploadDto!.mimetype,
           size: uploadDto!.size,
           uploadedAt: uploadDto!.uploadedAt,
           updatedAt: uploadDto!.updatedAt || uploadDto!.uploadedAt,
         },
       });
+
+      // Eliminar el archivo local después de subirlo a S3
+      fs.unlinkSync(uploadDto.path);
+
       return savedFile;
     } catch (error) {
       throw CustomError.internalServer(`Error al subir el archivo: ${error}`);

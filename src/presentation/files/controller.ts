@@ -32,6 +32,7 @@ export class FilesController {
       userId: userId,
       file: {
         originalname: file.originalname,
+        filename: file.filename,
         path: file.path,
         mimetype: file.mimetype,
         size: file.size,
@@ -41,7 +42,6 @@ export class FilesController {
 
     const [error, filesDto] = UploadFileDto.create(props);
     if (error) return res.status(400).json({ error });
-
     // Guardar el archivo usando el servicio
     this.filesService
       .uploadFile(filesDto!)

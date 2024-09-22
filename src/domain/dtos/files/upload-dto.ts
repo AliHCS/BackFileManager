@@ -11,7 +11,6 @@ export class UploadFileDto {
   ) {}
   get values() {
     const returnObj: { [key: string]: any } = {};
-
     if (this.userId) returnObj.userId = this.userId;
     if (this.file) returnObj.file = this.file;
     if (this.filename) returnObj.filename = this.filename;
@@ -37,6 +36,7 @@ export class UploadFileDto {
     if (
       !file ||
       !file.originalname ||
+      !file.filename ||
       !file.path ||
       !file.mimetype ||
       !file.size
@@ -44,7 +44,7 @@ export class UploadFileDto {
       return ["El archivo es requerido y debe contener información válida"];
     }
 
-    const filename = file.originalname;
+    const filename = file.filename;
     const path = file.path;
     const mimetype = file.mimetype;
     const size = file.size;

@@ -26,7 +26,8 @@ export const uploadFileToS3 = async (
     };
 
     // Subir el archivo a S3
-    await clientS3.send(new PutObjectCommand(uploadParams));
+    const command = new PutObjectCommand(uploadParams);
+    await clientS3.send(command);
 
     // Generar la URL del archivo subido
     const fileUrl = `https://${envs.AWS_BUCKET_NAME}.s3.${envs.AWS_BUCKET_REGION}.amazonaws.com/${fileKey}`;
